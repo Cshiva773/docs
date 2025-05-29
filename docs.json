@@ -11,17 +11,6 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guide",
-        "groups": [
-          {
-            "group": "Post Purchase",
-            "pages": [
-              "klaviyo-integration/klaviyoIntegrationGuide"
-            ]
-          }
-        ]
-      },
-      {
         "tab": "API Reference",
         "groups": [
           {
@@ -34,23 +23,49 @@
           {
             "group": "Store Category",
             "pages": [
-              "api-reference/endpoint/storeCategory/index",
-              "api-reference/endpoint/storeCategory/listCategory"
+              {
+                "group": "Store Category",
+                "pages": [
+                  "api-reference/endpoint/storeCategory/index",
+                  "api-reference/endpoint/storeCategory/listCategory"
+                ]
+              }
             ]
           },
           {
             "group": "Quotes",
             "pages": [
-              "api-reference/endpoint/Quotes/index",
-              "api-reference/endpoint/Quotes/listwarrantyquotesbyCategory"
+              {
+                "group": "Quotes",
+                "pages": [
+                  "api-reference/endpoint/Quotes/index",
+                  "api-reference/endpoint/Quotes/listwarrantyquotesbyCategory"
+                ]
+              }
             ]
           },
           {
             "group": "Order",
             "pages": [
-              "api-reference/endpoint/Order/index",
-              "api-reference/endpoint/Order/createContract",
-              "api-reference/endpoint/Order/updateContract"
+              {
+                "group": "Order",
+                "pages": [
+                  "api-reference/endpoint/Order/index",
+                  "api-reference/endpoint/Order/createContract",
+                  "api-reference/endpoint/Order/updateContract"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Guide",
+        "groups": [
+          {
+            "group": "Post Purchase",
+            "pages": [
+              "klaviyo-integration/klaviyoIntegrationGuide"
             ]
           }
         ]
