@@ -1,0 +1,26 @@
+---
+title: 'For Whole System Warranty'
+openapi: 'POST /quote/api/whole-system/listQuotes'
+description: 'This endpoint generates warranty quotes for an entire system order. It accepts store, proposal, and detailed line-item information as inputs, along with the installer’s warranty duration. The API returns available warranty offers, product coverage details, and a link to the specific terms and conditions for the warranty-eligible products'
+---
+
+## Headers
+
+| Header | Description | Required |
+|--------|-------------|----------|
+| X-SureBright-Access-Token | Access token for authentication | No |
+| Content-Type              | application/json                | Yes |
+
+## Country and State Codes
+
+- Country codes (Alpha 2): [IBAN Country Codes](https://www.iban.com/country-codes)
+- US State codes: [FIPS State Codes](https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code)
+
+---
+
+<Note>
+To regenerate quotes for the same proposalId / lead, provide one of the following identifiers:
+
+- `partnerProposalId` (this corresponds to your system's proposal Id)
+- `sbSalesLeadId` (returned in the first List Quotes API response)
+</Note>

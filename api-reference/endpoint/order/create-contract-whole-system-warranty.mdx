@@ -1,0 +1,62 @@
+---
+title: 'Create / Update Contracts for Whole System Warranty'
+openapi: 'POST /partner/api/v1/order/whole-system'
+---
+
+## Headers
+
+| Header | Description | Required |
+|--------|-------------|----------|
+| X-SureBright-Access-Token | Access token for authentication | Yes |
+| Content-Type              | application/json                | Yes |
+
+## Overview
+
+This endpoint creates or updates a warranty contract for a whole system order. It is used after obtaining warranty quotes from the **List Quotes for Whole System Warranty** endpoint.
+
+### Flow
+
+1. First, call the **List Quotes for Whole System Warranty** endpoint to get available warranty quotes for your system order
+2. Select the desired warranty plan from the returned `warrantyQuoteItemList`
+3. Submit the selected warranty details and customer information to this endpoint. Line items, total covered amount, and warranty duration are read from the sales lead identified by `sbSalesLeadId` — they do not need to be sent in the request.
+
+### Request Details
+
+- **`sbSalesLeadId`** - The sales lead Id obtained from the List Quotes API response. The contract's covered line items, purchase price, and warranty duration are derived from this lead.
+- **`warrantyQuoteId`** - The unique quote Id received from the quote endpoint
+- **`warrantyQuoteItemId`** - The unique identifier for the warranty quote item obtained from the quote endpoint
+
+<Note>
+`sbSalesLeadId` is required and is the source of truth for line items. Generate the lead first via the **List Quotes for Whole System Warranty** endpoint; do not send a `lineItemList` — any value is ignored.
+</Note>
+
+<Note>
+**Updating Existing Contracts**
+
+If a contract already exists for the provided `sbSalesLeadId`, calling this endpoint will update the existing contract instead of creating a new one:
+- Updates to line items are not permitted beyond **30 days** from the date of sale.
+ 
+- **Customer details** and other non-line item fields can be updated at any time
+</Note>
+
+### Validations
+
+The endpoint performs the following cross-checks before creating or updating a contract. Each failed check returns the listed error code and short-circuits the request before any side effect.
+
+| Check | Error |
+|-------|-------|
+| `sbSalesLeadId` exists **and** belongs to the requesting `storeId` (lookup is keyed by both) | `515` Sales Lead Not Found |
+| `warrantyQuoteId` matches the `sbQuoteId` carried on the lead's line items | `518` Quote ID Mismatch |
+| The quote document is retrievable from DDB by `warrantyQuoteId` | `513` No Quote Found |
+| The store exists for the requesting `storeId` | `514` Store Not Found |
+| `warrantyQuoteItemId` resolves to an item inside the quote | `519` Quote Item Not Found |
+| `warrantyCoverageYears` equals the resolved quote item's `coverageYears` | `520` Warranty Coverage Years Mismatch |
+| (Existing-contract update path) The contract referenced by the lead's `contractIdList` exists in DDB | `516` Contract Not Found |
+| (Existing-contract update path) Covered line items unchanged once 30 days have elapsed since purchase | `517` Line Items Update Not Allowed |
+
+These gates run **before** any user account creation, contract write, or notification, so a rejected request leaves no partial state behind.
+
+### Response
+
+On success, you will receive:
+- **`contractId`** - The unique identifier for the warranty contract created
